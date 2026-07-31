@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="logo-svg">
+  <defs>
+    <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#C9A961" stop-opacity="1"></stop>
+      <stop offset="100%" stop-color="#C9A961" stop-opacity="0.85"></stop>
+    </radialGradient>
+  </defs>
+
+  
+  <circle cx="100" cy="100" r="92" fill="none" stroke="#C9A961" stroke-width="1.2" opacity="0.5"></circle>
+  <circle cx="100" cy="100" r="86" fill="none" stroke="#C9A961" stroke-width="0.6" opacity="0.35"></circle>
+
+  
+  <line x1="22" y1="118" x2="178" y2="118" stroke="#C9A961" stroke-width="1" opacity="0.7"></line>
+
+  
+  <path d="M 60 118 L 100 78 L 140 118 Z" fill="none" stroke="#C9A961" stroke-width="1" opacity="0.4"></path>
+
+  
+  <path d="M 70 118 A 30 30 0 0 1 130 118 Z" fill="url(#sunGrad)" stroke="#C9A961" stroke-width="1.2"></path>
+
+  
+  <line x1="100" y1="80" x2="100" y2="62" stroke="#C9A961" stroke-width="1.6" stroke-linecap="round"></line>
+  <line x1="78" y1="92" x2="64" y2="80" stroke="#C9A961" stroke-width="1.6" stroke-linecap="round"></line>
+  <line x1="122" y1="92" x2="136" y2="80" stroke="#C9A961" stroke-width="1.6" stroke-linecap="round"></line>
+
+  
+  <path d="M 60 50 Q 70 42, 80 50 T 100 50 T 120 50 T 140 50" fill="none" stroke="#C9A961" stroke-width="1.6" stroke-linecap="round"></path>
+  <path d="M 60 58 Q 70 50, 80 58 T 100 58 T 120 58 T 140 58" fill="none" stroke="#C9A961" stroke-width="1.6" stroke-linecap="round"></path>
+
+  
+  <text x="100" y="32" text-anchor="middle" font-family="Cinzel, serif" font-size="9" fill="#C9A961" opacity="0.7">✦</text>
+  <text x="22" y="172" text-anchor="middle" font-family="Cinzel, serif" font-size="9" fill="#C9A961" opacity="0.7">✦</text>
+  <text x="178" y="172" text-anchor="middle" font-family="Cinzel, serif" font-size="9" fill="#C9A961" opacity="0.7">✦</text>
+
+  
+  <text x="100" y="158" text-anchor="middle" font-family="Cinzel, serif" font-size="10" letter-spacing="2" fill="#C9A961" opacity="0.85">XXXIII</text>
+</svg>

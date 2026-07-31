@@ -1,0 +1,15 @@
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 14px;
+  --space-4: 20px;
+  --space-5: 30px;
+  --space-6: 44px;
+  --space-7: 64px;
+  --space-8: 90px;   /* slide padding */
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-pill: 40px;
+}

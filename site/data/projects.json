@@ -1,0 +1,18 @@
+[
+  {
+    "id": "pandas-warmup",
+    "meta": "2026 · LOG #03",
+    "title": "Pandas Warm-Up",
+    "body": "First real pass at DataFrames — loading a CSV, filtering rows, and grouping.",
+    "tags": ["pandas", "CSV"],
+    "url": "https://github.com/your-handle"
+  },
+  {
+    "id": "number-guessing",
+    "meta": "2026 · LOG #02",
+    "title": "Number-Guessing Game",
+    "body": "Classic first build — random targets, input validation, and my first real while loop.",
+    "tags": ["random", "input"],
+    "url": "https://github.com/your-handle"
+  }
+]

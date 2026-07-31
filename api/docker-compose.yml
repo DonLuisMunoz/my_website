@@ -1,0 +1,23 @@
+services:
+  api:
+    build: .
+    container_name: portfolio-api
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "8000:8000"          # remove this if ONLY the tunnel should reach it
+    volumes:
+      - ./data:/app/data      # persists the SQLite database
+
+  # Optional: run the Cloudflare Tunnel as a sidecar so nothing is exposed
+  # to the public internet directly. Create the tunnel token in the
+  # Cloudflare Zero Trust dashboard, then drop it in .env as TUNNEL_TOKEN.
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: portfolio-tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    depends_on:
+      - api
