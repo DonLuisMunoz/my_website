@@ -12,6 +12,6 @@
    repo, so /blog works whether or not the backend is up.
    ============================================================ */
 window.PORTFOLIO_CONFIG = {
-  API_BASE: "",                       // set to "https://api.luisamunoz.com" once the API is live
-  PROJECTS_FALLBACK: "./data/projects.json"
+  API_BASE: "https://api.luisamunoz.com", // set to "https://api.luisamunoz.com" once the API is live
+  PROJECTS_FALLBACK: "./data/projects.json",
 };
