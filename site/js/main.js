@@ -90,11 +90,21 @@
   function loadProjects() {
     if (!listEl) return;
     // Try the live API first, fall back to the baked-in JSON file.
+    //
+    // An EMPTY list from the API counts as a fallback too. A fresh backend has
+    // an empty database and answers 200 with [], which isn't an error, so
+    // without this the log would render zero cards and the stack bars would
+    // collapse the moment API_BASE was set. The committed JSON stays the floor.
     var apiUrl = CFG.API_BASE ? CFG.API_BASE.replace(/\/$/, "") + "/api/projects" : null;
+    function fromFile() {
+      return fetch(CFG.PROJECTS_FALLBACK).then(function (r) { return r.json(); });
+    }
     var chain = apiUrl
-      ? fetch(apiUrl).then(function (r) { if (!r.ok) throw 0; return r.json(); })
-          .catch(function () { return fetch(CFG.PROJECTS_FALLBACK).then(function (r) { return r.json(); }); })
-      : fetch(CFG.PROJECTS_FALLBACK).then(function (r) { return r.json(); });
+      ? fetch(apiUrl)
+          .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+          .then(function (items) { return (items && items.length) ? items : fromFile(); })
+          .catch(fromFile)
+      : fromFile();
     chain.then(function (projects) {
       renderProjects(projects);
       computeStack(projects);
