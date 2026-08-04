@@ -1,5 +1,13 @@
 [
   {
+    "id": "cheat-code-scanner",
+    "meta": "2026 · LOG #04",
+    "title": "Cheat Code Scanner",
+    "body": "A terminal tool that logs button presses and counts how often a combo like \"DD\" shows up. Same idea as searching for text inside a dataset.",
+    "tags": ["string slicing", "loops", "conditionals", "accumulator"],
+    "url": "https://github.com/DonLuisMunoz/Cheat_Code_Scanner"
+  },
+  {
     "id": "boss-battle",
     "meta": "2026 · LOG #03",
     "title": "Boss Battle",

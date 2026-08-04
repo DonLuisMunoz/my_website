@@ -81,7 +81,7 @@
     if (!projects || !projects.length) { listEl.innerHTML = ""; return; }
     listEl.innerHTML = projects.map(cardHTML).join("");
     var shipped = document.querySelector("[data-shipped]");
-    if (shipped) shipped.textContent = projects.length + document.querySelectorAll(".featured").length;
+    if (shipped) shipped.textContent = projects.length;
   }
 
   function loadProjects() {

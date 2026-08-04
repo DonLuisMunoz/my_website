@@ -152,21 +152,25 @@
           <div class="featured__flag">FEATURED</div>
           <div class="featured__row">
             <div class="featured__col">
-              <div class="card__meta">2026 · LOG #04</div>
-              <h3 class="featured__title">Cheat Code Scanner</h3>
+              <div class="card__meta">2026 · IN PROGRESS</div>
+              <h3 class="featured__title">Tampa Bay Affordability Analysis</h3>
               <p class="featured__body">
-                A terminal tool that logs button presses and counts how often a
-                combo — like <span class="inline-code">"DD"</span> — appears.
-                The same idea behind searching for text in a dataset.
+                Which Tampa Bay ZIP has gotten least affordable since 2020? Rent
+                vs income for every ZIP, built on Zillow (ZORI, ZHVI) and US
+                Census data. Raw CSVs load into Postgres (running in Docker)
+                staging tables, and every clean step is a new SQL view or table,
+                validated before it counts. The SQL pipeline is done, Power BI
+                is next.
               </p>
               <div class="tags">
-                <span class="tag">string slicing</span>
-                <span class="tag">loops</span>
-                <span class="tag">conditionals</span>
-                <span class="tag">accumulator</span>
+                <span class="tag">SQL</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">Docker</span>
+                <span class="tag">data modeling</span>
+                <span class="tag">validation</span>
               </div>
               <a
-                href="https://github.com/DonLuisMunoz/Cheat_Code_Scanner"
+                href="https://github.com/DonLuisMunoz/tampa-affordability-analysis"
                 target="_blank"
                 rel="noopener"
                 class="btn btn--gold btn--sm"
@@ -177,21 +181,23 @@
             <div class="featured__col">
               <div class="bug-label">// the bug that taught me most</div>
               <div class="code-block code-block--bad">
-                <span class="syn-kw">if</span> x ==
-                <span class="syn-str">"A"</span> <span class="syn-kw">or</span>
-                <span class="syn-str">"B"</span>:
+                <span class="syn-kw">JOIN</span> zhvi zh
+                <span class="syn-kw">ON</span> zo.zip =
+                zh.<span class="syn-str">"RegionID"</span>
               </div>
               <p class="bug-note">
-                Python treats the bare string as always
+                My three-way join returned
                 <span class="inline-code" style="color: var(--accent)"
-                  >True</span
-                >, so the left side never gets checked. My loop quit every time.
+                  >0 rows</span
+                >
+                with no error. I'd joined a real ZIP (33510) to Zillow's
+                internal RegionID. 0 rows from an inner join with no error means
+                the keys never matched, not a syntax bug.
               </p>
               <div class="code-block code-block--good">
-                <span class="syn-kw">if</span> x ==
-                <span class="syn-str">"A"</span>
-                <span class="syn-kw">or</span> x ==
-                <span class="syn-str">"B"</span>:
+                <span class="syn-kw">JOIN</span> zhvi zh
+                <span class="syn-kw">ON</span> zo.zip =
+                zh.<span class="syn-str">"RegionName"</span>
               </div>
             </div>
           </div>
