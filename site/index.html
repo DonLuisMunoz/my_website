@@ -1,217 +1,394 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Luis A. Munoz — Learning in Public</title>
-  <meta name="description" content="Teaching myself Python & data, one tiny project at a time. The honest log of what I'm figuring out.">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Luis A. Munoz — Learning in Public</title>
+    <meta
+      name="description"
+      content="Teaching myself Python & data, one tiny project at a time. The honest log of what I'm figuring out."
+    />
 
-  <!-- fonts (Google Fonts, by reference) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- fonts (Google Fonts, by reference) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- the ONE stylesheet -->
-  <link rel="stylesheet" href="./css/styles.css">
+    <!-- the ONE stylesheet -->
+    <link rel="stylesheet" href="./css/styles.css" />
 
-  <!-- Google Analytics (replace G-XXXXXXXXXX with your Measurement ID) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-  </script>
-</head>
-<body>
-
-  <!-- ============ NAV ============ -->
-  <nav class="nav">
-    <a href="#top" class="nav__brand">
-      <span class="nav__mark">&gt;_</span>
-      <span class="nav__wordmark">luis<span class="dot">.</span>learns</span>
-    </a>
-    <div class="nav__links">
-      <a href="#log" class="nav__link">log</a>
-      <a href="#stack" class="nav__link">stack</a>
-      <a href="#writing" class="nav__link">writing</a>
-      <a href="#contact" class="nav__cta">say hi</a>
-    </div>
-  </nav>
-
-  <!-- ============ HERO ============ -->
-  <header id="top" class="hero">
-    <div class="hero__grid">
-      <div>
-        <div class="badge"><span class="badge__dot"></span> learning in public</div>
-        <h1 class="hero__title">I build small things and learn <span class="hl">out loud.</span></h1>
-        <p class="hero__sub">Hi, I'm <strong>Luis A. Munoz</strong> — teaching myself Python &amp; data, one tiny project at a time. This is the messy, honest log of what I'm figuring out.</p>
-        <div class="hero__actions">
-          <a href="#log" class="btn btn--gold">read the log →</a>
-          <a href="https://github.com/your-handle" target="_blank" rel="noopener" class="btn btn--paper">github ↗</a>
-        </div>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-M9YCFY8VNQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-M9YCFY8VNQ");
+    </script>
+  </head>
+  <body>
+    <!-- ============ NAV ============ -->
+    <nav class="nav">
+      <a href="#top" class="nav__brand">
+        <span class="nav__mark">&gt;_</span>
+        <span class="nav__wordmark">luis<span class="dot">.</span>learns</span>
+      </a>
+      <div class="nav__links">
+        <a href="#log" class="nav__link">log</a>
+        <a href="#stack" class="nav__link">stack</a>
+        <a href="#writing" class="nav__link">writing</a>
+        <a href="#contact" class="nav__cta">say hi</a>
       </div>
+    </nav>
 
-      <div class="term">
-        <div class="term__tag term__tag--a">def learn():</div>
-        <div class="term__tag term__tag--b">import pandas</div>
-        <div class="term__window">
-          <div class="term__bar">
-            <span class="term__dot term__dot--r"></span>
-            <span class="term__dot term__dot--y"></span>
-            <span class="term__dot term__dot--g"></span>
-            <span class="term__path">luis@learning ~ %</span>
-          </div>
-          <div class="term__body">
-            <div class="term__muted"><span class="term__prompt">$</span> whoami</div>
-            <div class="term__out">aspiring data analyst, full-time learner</div>
-            <div class="term__muted term__gap"><span class="term__prompt">$</span> cat goals.txt</div>
-            <div class="term__goal">→ ship one small project a week</div>
-            <div class="term__goal">→ break things, write down why</div>
-            <div class="term__muted term__gap"><span class="term__prompt">$</span> <span data-type class="term__goal"></span><span class="term__caret"></span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- currently strip -->
-    <div class="strip">
-      <div class="strip__cell"><span class="strip__label">// currently</span><div class="strip__value">learning <span class="t-teal">pandas</span></div></div>
-      <div class="strip__cell"><span class="strip__label">// streak</span><div class="strip__value"><span data-streak class="t-accent">0</span> days</div></div>
-      <div class="strip__cell"><span class="strip__label">// shipped</span><div class="strip__value"><span class="t-accent" data-shipped>4</span> projects</div></div>
-      <div class="strip__cell"><span class="strip__label">// reading</span><div class="strip__value">Crash Course</div></div>
-    </div>
-  </header>
-
-  <!-- ============ LEARNING LOG ============ -->
-  <section id="log" class="section section--paper">
-    <div class="section__inner">
-      <div data-reveal class="section__head">
-        <div class="section-kicker">// the learning log</div>
-        <h2 class="section-title">What I've been building</h2>
-        <p class="section-lead">Each entry is a tiny project and the lesson that actually stuck. Newest first.</p>
-      </div>
-
-      <!-- featured entry (hand-curated highlight) -->
-      <article data-reveal class="featured">
-        <div class="featured__flag">FEATURED</div>
-        <div class="featured__row">
-          <div class="featured__col">
-            <div class="card__meta">2026 · LOG #04</div>
-            <h3 class="featured__title">Cheat Code Scanner</h3>
-            <p class="featured__body">A terminal tool that logs button presses and counts how often a combo — like <span class="inline-code">"DD"</span> — appears. The same idea behind searching for text in a dataset.</p>
-            <div class="tags">
-              <span class="tag">string slicing</span>
-              <span class="tag">loops</span>
-              <span class="tag">conditionals</span>
-              <span class="tag">accumulator</span>
-            </div>
-            <a href="https://github.com/your-handle" target="_blank" rel="noopener" class="btn btn--gold btn--sm" style="margin-top:24px;">view the code ↗</a>
-          </div>
-          <div class="featured__col">
-            <div class="bug-label">// the bug that taught me most</div>
-            <div class="code-block code-block--bad"><span class="syn-kw">if</span> x == <span class="syn-str">"A"</span> <span class="syn-kw">or</span> <span class="syn-str">"B"</span>:</div>
-            <p class="bug-note">Python treats the bare string as always <span class="inline-code" style="color:var(--accent)">True</span>, so the left side never gets checked. My loop quit every time.</p>
-            <div class="code-block code-block--good"><span class="syn-kw">if</span> x == <span class="syn-str">"A"</span> <span class="syn-kw">or</span> x == <span class="syn-str">"B"</span>:</div>
-          </div>
-        </div>
-      </article>
-
-      <!-- data-driven project cards: rendered by js/main.js from data/projects.json -->
-      <div id="project-list" data-reveal class="projects">
-        <!-- cards injected here -->
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ TECH STACK ============ -->
-  <section id="stack" class="section section--cream">
-    <div class="section__inner">
-      <div data-reveal class="section__head">
-        <div class="section-kicker">// the stack</div>
-        <h2 class="section-title">Tools I'm getting my hands dirty with</h2>
-        <p class="section-lead">Honest levels — XP bars, not flexes.</p>
-      </div>
-      <div data-reveal class="skills">
-        <div><div class="skill__head"><span>Python</span><span class="skill__level">comfortable</span></div><div class="skill__track"><div class="skill__fill fill--gold" style="width:72%"></div></div></div>
-        <div><div class="skill__head"><span>pandas</span><span class="skill__level">learning</span></div><div class="skill__track"><div class="skill__fill fill--teal" style="width:48%"></div></div></div>
-        <div><div class="skill__head"><span>Git &amp; GitHub</span><span class="skill__level">daily</span></div><div class="skill__track"><div class="skill__fill fill--accent" style="width:60%"></div></div></div>
-        <div><div class="skill__head"><span>SQL</span><span class="skill__level">starting out</span></div><div class="skill__track"><div class="skill__fill fill--pink" style="width:30%"></div></div></div>
-        <div><div class="skill__head"><span>NumPy</span><span class="skill__level">starting out</span></div><div class="skill__track"><div class="skill__fill fill--gold" style="width:26%"></div></div></div>
-        <div><div class="skill__head"><span>Matplotlib</span><span class="skill__level">starting out</span></div><div class="skill__track"><div class="skill__fill fill--teal" style="width:34%"></div></div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ WRITING ============ -->
-  <section id="writing" class="section section--paper">
-    <div class="section__inner">
-      <div data-reveal class="writing-head">
+    <!-- ============ HERO ============ -->
+    <header id="top" class="hero">
+      <div class="hero__grid">
         <div>
-          <div class="section-kicker">// from the blog</div>
-          <h2 class="section-title">Writing it down</h2>
+          <div class="badge">
+            <span class="badge__dot"></span> learning in public
+          </div>
+          <h1 class="hero__title">
+            I build small things and learn <span class="hl">out loud.</span>
+          </h1>
+          <p class="hero__sub">
+            Hi, I'm <strong>Luis A. Munoz</strong> — teaching myself Python
+            &amp; data, one tiny project at a time. This is the messy, honest
+            log of what I'm figuring out.
+          </p>
+          <div class="hero__actions">
+            <a href="#log" class="btn btn--gold">read the log →</a>
+            <a
+              href="https://github.com/DonLuisMunoz"
+              target="_blank"
+              rel="noopener"
+              class="btn btn--paper"
+              >github ↗</a
+            >
+          </div>
         </div>
-        <a href="https://your-blog.com" target="_blank" rel="noopener" class="btn btn--paper btn--sm">all posts ↗</a>
+
+        <div class="term">
+          <div class="term__tag term__tag--a">def learn():</div>
+          <div class="term__tag term__tag--b">import pandas</div>
+          <div class="term__window">
+            <div class="term__bar">
+              <span class="term__dot term__dot--r"></span>
+              <span class="term__dot term__dot--y"></span>
+              <span class="term__dot term__dot--g"></span>
+              <span class="term__path">luis@learning ~ %</span>
+            </div>
+            <div class="term__body">
+              <div class="term__muted">
+                <span class="term__prompt">$</span> whoami
+              </div>
+              <div class="term__out">
+                aspiring data analyst, full-time learner
+              </div>
+              <div class="term__muted term__gap">
+                <span class="term__prompt">$</span> cat goals.txt
+              </div>
+              <div class="term__goal">→ ship one small project a week</div>
+              <div class="term__goal">→ break things, write down why</div>
+              <div class="term__muted term__gap">
+                <span class="term__prompt">$</span>
+                <span data-type class="term__goal"></span
+                ><span class="term__caret"></span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div data-reveal class="projects">
-        <a href="https://your-blog.com" target="_blank" rel="noopener" class="post">
-          <div class="card__meta">JUN 2026 · 4 MIN READ</div>
-          <h3 class="post__title">The <span class="inline-code" style="color:var(--accent)">or</span> trap that breaks every beginner's loop</h3>
-          <p class="post__body">Why <span class="inline-code">if x == "A" or "B"</span> silently lies to you — and the one-line fix.</p>
-        </a>
-        <a href="https://your-blog.com" target="_blank" rel="noopener" class="post">
-          <div class="card__meta">JUN 2026 · 3 MIN READ</div>
-          <h3 class="post__title">Why I'm learning to code in public</h3>
-          <p class="post__body">Accountability, better notes, and the surprising kindness of strangers on the internet.</p>
-        </a>
+
+      <!-- currently strip -->
+      <div class="strip">
+        <div class="strip__cell">
+          <span class="strip__label">// currently</span>
+          <div class="strip__value">
+            learning <span class="t-teal">pandas</span>
+          </div>
+        </div>
+        <div class="strip__cell">
+          <span class="strip__label">// streak</span>
+          <div class="strip__value">
+            <span data-streak class="t-accent">0</span> days
+          </div>
+        </div>
+        <div class="strip__cell">
+          <span class="strip__label">// shipped</span>
+          <div class="strip__value">
+            <span class="t-accent" data-shipped>4</span> projects
+          </div>
+        </div>
+        <div class="strip__cell">
+          <span class="strip__label">// reading</span>
+          <div class="strip__value">Crash Course</div>
+        </div>
       </div>
-    </div>
-  </section>
+    </header>
 
-  <!-- ============ CONTACT ============ -->
-  <section id="contact" class="contact">
-    <div data-reveal class="contact__inner">
-      <div class="contact__kicker">// say hi</div>
-      <h2 class="contact__title">Building something, hiring, or just learning too?</h2>
-      <p class="contact__sub">I'm always up to talk Python, data, or trading notes on the journey.</p>
+    <!-- ============ LEARNING LOG ============ -->
+    <section id="log" class="section section--paper">
+      <div class="section__inner">
+        <div data-reveal class="section__head">
+          <div class="section-kicker">// the learning log</div>
+          <h2 class="section-title">What I've been building</h2>
+          <p class="section-lead">
+            Each entry is a tiny project and the lesson that actually stuck.
+            Newest first.
+          </p>
+        </div>
 
-      <!-- contact form posts to the API (see js/main.js + api/main.py) -->
-      <form id="contact-form" class="contact__form" novalidate>
-        <div class="field">
-          <label for="cf-name">Name</label>
-          <input id="cf-name" name="name" type="text" required>
-        </div>
-        <div class="field">
-          <label for="cf-email">Email</label>
-          <input id="cf-email" name="email" type="email" required>
-        </div>
-        <div class="field">
-          <label for="cf-message">Message</label>
-          <textarea id="cf-message" name="message" rows="4" required></textarea>
-        </div>
-        <button type="submit" class="btn btn--gold">send it →</button>
-        <div class="form-status" id="form-status" aria-live="polite"></div>
-      </form>
+        <!-- featured entry (hand-curated highlight) -->
+        <article data-reveal class="featured">
+          <div class="featured__flag">FEATURED</div>
+          <div class="featured__row">
+            <div class="featured__col">
+              <div class="card__meta">2026 · LOG #04</div>
+              <h3 class="featured__title">Cheat Code Scanner</h3>
+              <p class="featured__body">
+                A terminal tool that logs button presses and counts how often a
+                combo — like <span class="inline-code">"DD"</span> — appears.
+                The same idea behind searching for text in a dataset.
+              </p>
+              <div class="tags">
+                <span class="tag">string slicing</span>
+                <span class="tag">loops</span>
+                <span class="tag">conditionals</span>
+                <span class="tag">accumulator</span>
+              </div>
+              <a
+                href="https://github.com/DonLuisMunoz"
+                target="_blank"
+                rel="noopener"
+                class="btn btn--gold btn--sm"
+                style="margin-top: 24px"
+                >view the code ↗</a
+              >
+            </div>
+            <div class="featured__col">
+              <div class="bug-label">// the bug that taught me most</div>
+              <div class="code-block code-block--bad">
+                <span class="syn-kw">if</span> x ==
+                <span class="syn-str">"A"</span> <span class="syn-kw">or</span>
+                <span class="syn-str">"B"</span>:
+              </div>
+              <p class="bug-note">
+                Python treats the bare string as always
+                <span class="inline-code" style="color: var(--accent)"
+                  >True</span
+                >, so the left side never gets checked. My loop quit every time.
+              </p>
+              <div class="code-block code-block--good">
+                <span class="syn-kw">if</span> x ==
+                <span class="syn-str">"A"</span>
+                <span class="syn-kw">or</span> x ==
+                <span class="syn-str">"B"</span>:
+              </div>
+            </div>
+          </div>
+        </article>
 
-      <div class="contact__links">
-        <a href="https://github.com/your-handle" target="_blank" rel="noopener" class="contact__btn contact__btn--gold">GitHub ↗</a>
-        <a href="https://your-blog.com" target="_blank" rel="noopener" class="contact__btn">Blog ↗</a>
-        <a href="https://linkedin.com/in/your-handle" target="_blank" rel="noopener" class="contact__btn">LinkedIn ↗</a>
-        <a href="mailto:lamunoz12@gmail.com" class="contact__btn">Email ↗</a>
+        <!-- data-driven project cards: rendered by js/main.js from data/projects.json -->
+        <div id="project-list" data-reveal class="projects">
+          <!-- cards injected here -->
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ============ FOOTER ============ -->
-  <footer class="footer">
-    <div class="footer__brand">
-      <span class="footer__mark">&gt;_</span>
-      <span class="footer__name">Luis A. Munoz · learning in public</span>
-    </div>
-    <div class="footer__meta">built &amp; hosted by hand · 2026</div>
-  </footer>
+    <!-- ============ TECH STACK ============ -->
+    <section id="stack" class="section section--cream">
+      <div class="section__inner">
+        <div data-reveal class="section__head">
+          <div class="section-kicker">// the stack</div>
+          <h2 class="section-title">Tools I'm getting my hands dirty with</h2>
+          <p class="section-lead">Honest levels — XP bars, not flexes.</p>
+        </div>
+        <div data-reveal class="skills">
+          <div>
+            <div class="skill__head">
+              <span>Python</span><span class="skill__level">comfortable</span>
+            </div>
+            <div class="skill__track">
+              <div class="skill__fill fill--gold" style="width: 72%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="skill__head">
+              <span>pandas</span><span class="skill__level">learning</span>
+            </div>
+            <div class="skill__track">
+              <div class="skill__fill fill--teal" style="width: 48%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="skill__head">
+              <span>Git &amp; GitHub</span
+              ><span class="skill__level">daily</span>
+            </div>
+            <div class="skill__track">
+              <div class="skill__fill fill--accent" style="width: 60%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="skill__head">
+              <span>SQL</span><span class="skill__level">starting out</span>
+            </div>
+            <div class="skill__track">
+              <div class="skill__fill fill--pink" style="width: 30%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="skill__head">
+              <span>NumPy</span><span class="skill__level">starting out</span>
+            </div>
+            <div class="skill__track">
+              <div class="skill__fill fill--gold" style="width: 26%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="skill__head">
+              <span>Matplotlib</span
+              ><span class="skill__level">starting out</span>
+            </div>
+            <div class="skill__track">
+              <div class="skill__fill fill--teal" style="width: 34%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <script src="./js/config.js"></script>
-  <script src="./js/main.js"></script>
-</body>
+    <!-- ============ WRITING ============ -->
+    <section id="writing" class="section section--paper">
+      <div class="section__inner">
+        <div data-reveal class="writing-head">
+          <div>
+            <div class="section-kicker">// from the blog</div>
+            <h2 class="section-title">Writing it down</h2>
+          </div>
+          <a
+            href="https://your-blog.com"
+            target="_blank"
+            rel="noopener"
+            class="btn btn--paper btn--sm"
+            >all posts ↗</a
+          >
+        </div>
+        <div data-reveal class="projects">
+          <a
+            href="https://your-blog.com"
+            target="_blank"
+            rel="noopener"
+            class="post"
+          >
+            <div class="card__meta">JUN 2026 · 4 MIN READ</div>
+            <h3 class="post__title">
+              The
+              <span class="inline-code" style="color: var(--accent)">or</span>
+              trap that breaks every beginner's loop
+            </h3>
+            <p class="post__body">
+              Why <span class="inline-code">if x == "A" or "B"</span> silently
+              lies to you — and the one-line fix.
+            </p>
+          </a>
+          <a
+            href="https://your-blog.com"
+            target="_blank"
+            rel="noopener"
+            class="post"
+          >
+            <div class="card__meta">JUN 2026 · 3 MIN READ</div>
+            <h3 class="post__title">Why I'm learning to code in public</h3>
+            <p class="post__body">
+              Accountability, better notes, and the surprising kindness of
+              strangers on the internet.
+            </p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="contact">
+      <div data-reveal class="contact__inner">
+        <div class="contact__kicker">// say hi</div>
+        <h2 class="contact__title">
+          Building something, hiring, or just learning too?
+        </h2>
+        <p class="contact__sub">
+          I'm always up to talk Python, data, or trading notes on the journey.
+        </p>
+
+        <!-- contact form posts to the API (see js/main.js + api/main.py) -->
+        <form id="contact-form" class="contact__form" novalidate>
+          <div class="field">
+            <label for="cf-name">Name</label>
+            <input id="cf-name" name="name" type="text" required />
+          </div>
+          <div class="field">
+            <label for="cf-email">Email</label>
+            <input id="cf-email" name="email" type="email" required />
+          </div>
+          <div class="field">
+            <label for="cf-message">Message</label>
+            <textarea
+              id="cf-message"
+              name="message"
+              rows="4"
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn--gold">send it →</button>
+          <div class="form-status" id="form-status" aria-live="polite"></div>
+        </form>
+
+        <div class="contact__links">
+          <a
+            href="https://github.com/DonLuisMunoz"
+            target="_blank"
+            rel="noopener"
+            class="contact__btn contact__btn--gold"
+            >GitHub ↗</a
+          >
+          <a
+            href="https://your-blog.com"
+            target="_blank"
+            rel="noopener"
+            class="contact__btn"
+            >Blog ↗</a
+          >
+          <a
+            href="https://www.linkedin.com/in/luisalfredomunoz/"
+            target="_blank"
+            rel="noopener"
+            class="contact__btn"
+            >LinkedIn ↗</a
+          >
+          <a href="mailto:lamunoz12@gmail.com" class="contact__btn">Email ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+      <div class="footer__brand">
+        <span class="footer__mark">&gt;_</span>
+        <span class="footer__name">Luis A. Munoz · learning in public</span>
+      </div>
+      <div class="footer__meta">built &amp; hosted by hand · 2026</div>
+    </footer>
+
+    <script src="./js/config.js"></script>
+    <script src="./js/main.js"></script>
+  </body>
 </html>

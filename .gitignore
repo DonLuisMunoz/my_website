@@ -1,0 +1,16 @@
+# secrets — never commit
+api/.env
+**/.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# sqlite data
+api/data/
+*.db
+
+# os
+.DS_Store
