@@ -1,18 +1,10 @@
 [
   {
-    "id": "pandas-warmup",
+    "id": "boss-battle",
     "meta": "2026 · LOG #03",
-    "title": "Pandas Warm-Up",
-    "body": "First real pass at DataFrames — loading a CSV, filtering rows, and grouping.",
-    "tags": ["pandas", "CSV"],
-    "url": "https://github.com/DonLuisMunoz"
-  },
-  {
-    "id": "number-guessing",
-    "meta": "2026 · LOG #02",
-    "title": "Number-Guessing Game",
-    "body": "Classic first build — random targets, input validation, and my first real while loop.",
-    "tags": ["random", "input"],
-    "url": "https://github.com/DonLuisMunoz"
+    "title": "Boss Battle",
+    "body": "A terminal RPG from MIT 6.0001 (lectures 1 to 3): you attack a dragon and its health bar drains hit by hit. My first build that ties loops, conditionals, and string work together.",
+    "tags": ["while loops", "conditionals", "integer division", "f-strings"],
+    "url": "https://github.com/DonLuisMunoz/Boss-Battle"
   }
 ]

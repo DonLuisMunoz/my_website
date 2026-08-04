@@ -28,7 +28,10 @@
   /* ---------- 2. streak count-up ---------- */
   var streakEl = document.querySelector("[data-streak]");
   if (streakEl) {
-    var target = 27, n = 0;
+    // Days since Luis started (2026-07-01), computed live so it's always current.
+    var START = new Date(2026, 6, 1); // month is 0-indexed: 6 = July
+    var target = Math.max(0, Math.floor((Date.now() - START.getTime()) / 86400000));
+    var n = 0;
     setTimeout(function up() {
       n += 1; streakEl.textContent = n;
       if (n < target) setTimeout(up, 32);
@@ -78,7 +81,7 @@
     if (!projects || !projects.length) { listEl.innerHTML = ""; return; }
     listEl.innerHTML = projects.map(cardHTML).join("");
     var shipped = document.querySelector("[data-shipped]");
-    if (shipped) shipped.textContent = projects.length;
+    if (shipped) shipped.textContent = projects.length + document.querySelectorAll(".featured").length;
   }
 
   function loadProjects() {
@@ -100,7 +103,13 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!CFG.API_BASE) {
-        status.textContent = "Form backend not connected yet — email me directly for now.";
+        // No backend yet: turn the form into a pre-filled email so it still works.
+        var n = form.name.value.trim(), em = form.email.value.trim(), msg = form.message.value.trim();
+        if (!n || !em || !msg) { status.textContent = "Please fill in every field."; return; }
+        var subject = encodeURIComponent("Hello from luisamunoz.com — " + n);
+        var body = encodeURIComponent(msg + "\n\n— " + n + " (" + em + ")");
+        window.location.href = "mailto:lamunoz12@gmail.com?subject=" + subject + "&body=" + body;
+        status.textContent = "Opening your email app… if nothing happens, write me at lamunoz12@gmail.com.";
         return;
       }
       var payload = {
