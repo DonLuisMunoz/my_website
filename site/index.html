@@ -44,6 +44,7 @@
       <div class="nav__links">
         <a href="#log" class="nav__link">log</a>
         <a href="#stack" class="nav__link">stack</a>
+        <a href="#foundation" class="nav__link">background</a>
         <!-- <a href="#writing" class="nav__link">writing</a> hidden until real blog (Phase 4) -->
         <a href="#contact" class="nav__cta">say hi</a>
       </div>
@@ -148,7 +149,7 @@
         </div>
 
         <!-- featured entry (hand-curated highlight). data-tools feeds the stack tally. -->
-        <article data-reveal class="featured" data-tools="SQL,PostgreSQL,Docker">
+        <article data-reveal class="featured" data-tools="SQL,PostgreSQL">
           <div class="featured__flag">FEATURED</div>
           <div class="featured__row">
             <div class="featured__col">
@@ -224,6 +225,34 @@
         <!-- bars are computed by js/main.js from each project's tools, ranked by reps -->
         <div data-reveal class="skills" data-stack></div>
         <div data-reveal class="stack-next" data-stack-next></div>
+      </div>
+    </section>
+
+    <!-- ============ IT FOUNDATION ============ -->
+    <section id="foundation" class="section section--paper">
+      <div class="section__inner">
+        <div data-reveal class="section__head">
+          <div class="section-kicker">// the foundation</div>
+          <h2 class="section-title">Ten years in IT, before data</h2>
+          <p class="section-lead">
+            I'm not starting from zero. Before the pivot I spent 10+ years in
+            IT, helpdesk to systems administrator. That's the base I'm building
+            analytics on, not something I left behind.
+          </p>
+        </div>
+        <div data-reveal class="tags tags--foundation">
+          <span class="tag">Windows &amp; Windows Server</span>
+          <span class="tag">Linux</span>
+          <span class="tag">Networking &amp; firewalls</span>
+          <span class="tag">Virtualization (Proxmox)</span>
+          <span class="tag">Docker</span>
+          <span class="tag">PowerShell &amp; bash</span>
+          <span class="tag">Monitoring (SolarWinds)</span>
+        </div>
+        <p data-reveal class="foundation-note">
+          My Tampa project's database isn't in a sandbox. It runs on Postgres in
+          Docker on my own Proxmox homelab.
+        </p>
       </div>
     </section>
 
