@@ -1,0 +1,16 @@
+[project]
+name = "portfolio-api"
+version = "1.0.0"
+description = "Backend for luisamunoz.com: projects CMS, contact inbox."
+requires-python = ">=3.10"
+
+# Single source of truth for dependencies. The Dockerfile installs straight
+# from this file, so there's no requirements.txt to keep in sync.
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.34",
+  "pydantic[email]>=2.10",
+]
+
+# Run it locally without creating or activating anything:
+#   uv run --project . uvicorn main:app --reload

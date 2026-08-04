@@ -1,16 +1,22 @@
 # Luis — Portfolio (Learning in Public)
 
-A Neo-Brutalist portfolio / link-in-bio site. **Plain HTML/CSS/JS** frontend on Cloudflare
-Pages, with an optional **Python (FastAPI)** backend on a homelab for the project CMS and
-contact form. Same brand DNA as the Content system, rendered in the brutalist skin.
+**luisamunoz.com** — Luis's personal hub and home base. It branches out to GitHub (code),
+LinkedIn (professional), and Instagram (personal), and it carries the portfolio, the learning
+journal, and the blog, with the job search as the practical lead.
+
+**Plain HTML/CSS/JS**, no build step, served by a Cloudflare Worker (`my-website`). An
+optional **Python (FastAPI)** backend on dockerHost handles the project CMS and contact form.
+The blog does not depend on it.
 
 ## Folder structure
 
 ```
 portfolio-system/
-├── site/                     # FRONTEND → deploy to Cloudflare Pages (output dir: site)
+├── site/                     # FRONTEND → served by the `my-website` Cloudflare Worker
 │   ├── index.html            # the portfolio page (semantic, classed, no inline styles)
 │   ├── admin.html            # private panel to add/edit/delete projects (noindex)
+│   ├── blog/
+│   │   └── index.html         # /blog — post list, and single posts via ?p=<slug>
 │   ├── css/
 │   │   ├── styles.css         # the ONE entry point — imports everything below
 │   │   ├── components.css     # all neobrutalist component classes
@@ -18,22 +24,29 @@ portfolio-system/
 │   ├── js/
 │   │   ├── config.js          # ← set API_BASE here (the only knob)
 │   │   ├── main.js            # typing, streak, reveal, project render, contact form
+│   │   ├── blog.js            # markdown renderer + the /blog views (no dependencies)
 │   │   └── admin.js           # CRUD client for the admin panel
+│   ├── content/
+│   │   └── posts/             # blog posts as .md + index.json manifest
 │   ├── data/
 │   │   └── projects.json      # project data (static fallback / no-backend source)
-│   └── assets/                # logos (svg)
+│   └── assets/                # logos, favicon, og image
+│       └── posts/             # post images, one folder per slug
 │
-├── api/                      # BACKEND → Docker on homelab behind Cloudflare Tunnel
-│   ├── main.py               # FastAPI: projects CRUD + contact + health
-│   ├── requirements.txt
-│   ├── Dockerfile
-│   ├── docker-compose.yml     # api + optional cloudflared tunnel sidecar
-│   └── .env.example          # copy to .env, fill secrets (never commit .env)
+├── newpost.py                 # scaffold + check posts (uv run newpost.py new "Title")
+│
+├── api/                       # BACKEND → Docker on dockerHost, via the EXISTING tunnel
+│   ├── main.py                # FastAPI: projects CRUD + contact + messages + health
+│   ├── pyproject.toml         # the only dependency list (uv installs straight from it)
+│   ├── Dockerfile             # uv, not pip
+│   ├── docker-compose.yml     # works from the CLI or a Portainer repository stack
+│   └── .env.example           # copy to .env, fill secrets (never commit .env)
 │
 ├── docs/
-│   ├── ARCHITECTURE.md        # hosting recommendation + free tiers + alternative
-│   ├── DEPLOY.md              # step-by-step: Pages, then homelab + tunnel
+│   ├── ARCHITECTURE.md        # what runs where, and why the blog is static
+│   ├── DEPLOY.md              # the Worker (done) + the backend (CLI or Portainer)
 │   ├── ADD-A-PROJECT.md       # how to add/update a project (admin or JSON)
+│   ├── ADD-A-POST.md          # how to write a blog post (markdown + manifest)
 │   └── BACKEND-LESSON.md      # learn the backend (reinforcement-coach Phase 1)
 │
 ├── neobrutalism-spec.md       # authoritative component + interaction spec
@@ -42,8 +55,11 @@ portfolio-system/
 
 ## Quick start
 
-- **Just see it:** open `site/index.html` in a browser. Works static, no build.
+- **Just see it:** VS Code Live Server on `site/index.html`. Every path is relative, so it
+  works whether the server root is the repo or `site/`. `file://` won't work, because the
+  pages fetch JSON and the browser blocks that.
 - **Add a project:** see `docs/ADD-A-PROJECT.md`.
+- **Write a post:** `uv run newpost.py new "Title"`, then see `docs/ADD-A-POST.md`.
 - **Go live:** follow `docs/DEPLOY.md` (frontend first, backend optional).
 - **Understand the backend:** `docs/BACKEND-LESSON.md`.
 

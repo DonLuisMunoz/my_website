@@ -1,0 +1,17 @@
+{
+  "posts": [
+    {
+      "slug": "a-join-that-returned-zero-rows",
+      "title": "A join that returned zero rows and didn't complain",
+      "date": "2026-08-04",
+      "category": "building",
+      "minutes": 2,
+      "summary": "Zillow's region_id looks like a ZIP code. It isn't. The join was legal, the answer was empty, and nothing errored.",
+      "tags": [
+        "SQL",
+        "PostgreSQL",
+        "debugging"
+      ]
+    }
+  ]
+}

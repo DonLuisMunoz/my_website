@@ -8,9 +8,27 @@ __pycache__/
 .venv/
 venv/
 
+# uv
+.uv-cache/
+
 # sqlite data
 api/data/
 *.db
 
 # os
 .DS_Store
+
+# --- kept local, out of the public repo ---
+# This repo is public and gets browsed. These are working files, not portfolio.
+# Adding a path here does NOT untrack a file that git already knows about, so
+# each of these also needs:  git rm -r --cached <path>
+# That deletes it from GitHub and leaves it on disk.
+
+# personal learning scores — honest, but it undersells the work to a visitor
+docs/backend-quiz-log-2026-07-01.md
+
+# the previous design, superseded. dead links to your-blog.com live in here
+_archive/
+
+# Claude skill manifest — tooling config, not portfolio content
+SKILL.md

@@ -2,11 +2,25 @@
 
 Ideas parked for later. Newest at top.
 
-## Blog at luisamunoz.com/blog (Phase 4)
-Confirmed path: `/blog` (homelab is on subdomains, so the subpath is free).
-Not built yet. Likely markdown files rendered client-side so Luis can post
-without touching code. When live, un-hide the Writing section in index.html
-(nav link + the commented `#writing` section) and point it at `/blog`.
+## Blog at luisamunoz.com/blog (Phase 4) — BUILT 2026-08-04
+Markdown files in `site/content/posts/`, indexed by `index.json`, rendered
+client-side by `site/js/blog.js` (hand-written subset parser, no dependencies).
+`/blog/` lists posts, `/blog/?p=<slug>` shows one. Writing section on the home
+page is un-hidden and now data-driven off the same manifest, and it hides
+itself when there are no posts. How to write one: `docs/ADD-A-POST.md`.
+
+Deliberately static, not backend-served — the reasoning is in `docs/ARCHITECTURE.md`.
+
+Left open:
+- **Pretty post URLs.** `/blog/?p=slug` works on an assets-only Worker. `/blog/slug`
+  would need a Worker route or a per-post HTML file. Cosmetic, do it if the query
+  string starts bothering him when sharing links.
+- **Per-post share cards.** Every post currently inherits the site-wide `og-image.png`.
+  A post-specific OG image needs server-side rendering or one HTML file per post.
+- **Compose-in-browser.** Considered and rejected 2026-08-04. The Worker serves the repo,
+  so a browser editor would need the backend to commit to GitHub, which means a write token
+  living on the homelab. `newpost.py` handles the bookkeeping instead and nothing runs.
+  Revisit only if writing in VS Code turns out to be why posts don't get written.
 
 ## Real GitHub-tied streak (upgrade)
 Current streak = days since 2026-07-01, computed in JS (always accurate, never
@@ -17,23 +31,28 @@ contributions GraphQL that writes a number into the site, or (b) embed a
 third-party streak-stats image (styling won't match the brutalist skin, and it
 resets to 0 on a missed day). Revisit when the homelab backend is in play.
 
-## NEXT SESSION — backend + blog, done together
-Luis's call (2026-08-04): the backend phase and the `/blog` build are one combined
-project, not two. Standing up `api/` is what makes the blog dynamic (write/manage
-posts, not hand-edit HTML), so do them in the same session. Details in the two
-sections below.
+## Backend phase — code READY 2026-08-04, not deployed yet
+`api/main.py` is written, extended, and tested end to end locally. What changed
+in this pass:
+- Added the **`tools` field** to the project schema. It was missing, which meant
+  that the moment the site read projects from the API instead of the JSON file,
+  the whole tag-driven stack section would have gone empty. Includes an
+  `ALTER TABLE` migration so an existing database picks the column up.
+- Added admin **`GET /api/messages`** so the contact inbox is readable without SMTP.
+- Added a per-IP **rate limit** on `POST /api/contact` (the only public write route),
+  reading `CF-Connecting-IP` since behind the tunnel the socket IP is Cloudflare's.
+- `admin.html` / `admin.js` now have a tools input, separate from tags.
 
-## Backend phase — make it a full-stack project
-Stand up the FastAPI backend (api/) so the site stops being purely static and
-becomes a real full-stack build. This unlocks the dynamic features:
-- **Resume link/download** served + managed by the backend (versions, maybe
-  click tracking) instead of a static PDF. Deferred here on purpose 2026-08-04.
-- **Contact form** posts to the API instead of the mailto fallback.
-- **Project CMS** via the existing admin.html (add/edit projects without editing
-  JSON), which also feeds the tag-driven stack.
+Still to do, and it needs Luis at the homelab terminal:
+1. `docker compose up -d --build` on dockerHost.
+2. Cloudflare Tunnel public hostname `api.luisamunoz.com` → `http://portfolio-api:8000`,
+   added to the tunnel already running on dockerHost (not a second tunnel).
+3. Set `ALLOWED_ORIGINS=https://luisamunoz.com` in `api/.env` (CORS blocks it otherwise).
+4. Set `API_BASE` in `site/js/config.js`, push, and the contact form stops being a mailto.
+
+Deferred on purpose:
+- **Resume link/download** served and versioned by the backend instead of a static PDF.
 - **Real GitHub-tied streak** (needs a server-side fetch — see below).
-Backend runs on the homelab behind a Cloudflare Tunnel (e.g. api.luisamunoz.com,
-a subdomain alongside the other homelab services). See api/ + docs/DEPLOY.md.
 
 ## v2.0 — Visitor-intent landing (self-select)
 A warm landing page ("Hi, I'm Luis. What brings you here?") with brutalist

@@ -40,8 +40,8 @@
     />
 
     <!-- favicon -->
-    <link rel="icon" type="image/png" href="/assets/favicon.png" />
-    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href="./assets/favicon.png" />
+    <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
 
     <!-- fonts (Google Fonts, by reference) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -79,7 +79,7 @@
         <a href="#log" class="nav__link">log</a>
         <a href="#stack" class="nav__link">stack</a>
         <a href="#foundation" class="nav__link">background</a>
-        <!-- <a href="#writing" class="nav__link">writing</a> hidden until real blog (Phase 4) -->
+        <a href="./blog/" class="nav__link">writing</a>
         <a href="#contact" class="nav__cta">say hi</a>
       </div>
     </nav>
@@ -296,57 +296,22 @@
       </div>
     </section>
 
-    <!-- ============ WRITING (hidden until the real blog exists — see docs/BACKLOG.md Phase 4) ============
-    <section id="writing" class="section section--paper">
+    <!-- ============ WRITING ============
+         Cards are rendered by main.js from site/content/posts/index.json,
+         the same manifest /blog reads. The section hides itself when
+         there are no posts, so it can never show placeholders. -->
+    <section id="writing" class="section section--paper" hidden>
       <div class="section__inner">
         <div data-reveal class="writing-head">
           <div>
             <div class="section-kicker">// from the blog</div>
             <h2 class="section-title">Writing it down</h2>
           </div>
-          <a
-            href="https://your-blog.com"
-            target="_blank"
-            rel="noopener"
-            class="btn btn--paper btn--sm"
-            >all posts ↗</a
-          >
+          <a href="./blog/" class="btn btn--paper btn--sm">all posts →</a>
         </div>
-        <div data-reveal class="projects">
-          <a
-            href="https://your-blog.com"
-            target="_blank"
-            rel="noopener"
-            class="post"
-          >
-            <div class="card__meta">JUN 2026 · 4 MIN READ</div>
-            <h3 class="post__title">
-              The
-              <span class="inline-code" style="color: var(--accent)">or</span>
-              trap that breaks every beginner's loop
-            </h3>
-            <p class="post__body">
-              Why <span class="inline-code">if x == "A" or "B"</span> silently
-              lies to you — and the one-line fix.
-            </p>
-          </a>
-          <a
-            href="https://your-blog.com"
-            target="_blank"
-            rel="noopener"
-            class="post"
-          >
-            <div class="card__meta">JUN 2026 · 3 MIN READ</div>
-            <h3 class="post__title">Why I'm learning to code in public</h3>
-            <p class="post__body">
-              Accountability, better notes, and the surprising kindness of
-              strangers on the internet.
-            </p>
-          </a>
-        </div>
+        <div data-reveal class="projects" id="writing-list"></div>
       </div>
     </section>
-    ============ end hidden WRITING ============ -->
 
     <!-- ============ CONTACT ============ -->
     <section id="contact" class="contact">
@@ -390,15 +355,7 @@
             class="contact__btn contact__btn--gold"
             >GitHub ↗</a
           >
-          <!-- Blog link hidden until the real blog exists (Phase 4)
-          <a
-            href="https://your-blog.com"
-            target="_blank"
-            rel="noopener"
-            class="contact__btn"
-            >Blog ↗</a
-          >
-          -->
+          <a href="./blog/" class="contact__btn">Blog →</a>
           <a
             href="https://www.linkedin.com/in/luisalfredomunoz/"
             target="_blank"

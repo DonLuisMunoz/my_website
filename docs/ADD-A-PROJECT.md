@@ -1,63 +1,105 @@
 # How to add / update a project
 
 The learning-log cards (the grid under the FEATURED entry) are **data-driven** — you never
-hand-edit `index.html` to add one. There are two ways depending on whether your backend is up.
+hand-edit `index.html` to add one. There are two ways depending on whether the backend is up.
 
-## Way 1 — the Admin panel (recommended, needs the backend)
+## tools vs tags — the one thing to get right
 
-1. Make sure `API_BASE` is set in `site/js/config.js` and your Python API is running.
-2. Open **`/admin.html`** on your site (e.g. `https://luislearns.dev/admin.html`).
-3. Paste your **admin token** (the `ADMIN_TOKEN` from `api/.env`) into the token box.
-4. Fill in Title, Meta line (e.g. `2026 · LOG #05`), Description, Tags, and the repo URL.
-5. Hit **save project →**. It appears on the homepage immediately.
+Every project has both, and they do different jobs.
 
-From the same page you can **edit** or **delete** any existing project. The token is sent only
-as an auth header per request — it is never stored.
+- **`tools`** drives the **stack bars**. `main.js` counts how many projects list each tool and
+  ranks the bars by reps. A project saved with an empty `tools` contributes nothing to the
+  stack, silently. No error, the bar just doesn't move.
+- **`tags`** are display-only chips on the card. They're concepts (`joins`, `window functions`),
+  not tech.
 
-> Keep `/admin.html` low-profile: it has `noindex`, and every write requires the token. For a
-> personal portfolio that's enough. If you want a real login later, that's a natural next
-> Python lesson.
+Rule from the last pass, still holds: `tools` is for **new data skills being leveled up**
+(SQL, PostgreSQL, Python, Power BI). Owned IT skills (Docker, Proxmox, Active Directory) do
+**not** go in `tools`. They live in the IT foundation section, because a "starting out" bar
+next to Docker reads junior and undersells ten years of work.
+
+---
+
+## Way 1 — the Admin panel (needs the backend running)
+
+1. `API_BASE` is set in `site/js/config.js` and the API is up
+   (`curl https://api.luisamunoz.com/api/health` → `{"ok":true}`).
+2. Open **`https://luisamunoz.com/admin.html`**.
+3. Paste the **admin token** (`ADMIN_TOKEN` from `api/.env`) into the token box.
+4. Fill in **Title**, **Meta line** (e.g. `2026 · LOG #05`), **Description**, **Tools**,
+   **Tags**, and the repo URL. Leave the URL blank if there's no repo — an empty URL hides the
+   button, which is how you avoid shipping a dead "view the code" link.
+5. Hit **save project →**. It appears on the home page immediately.
+
+Edit and delete work from the same page. The token is sent as an auth header per request and
+is never stored.
+
+**If the panel misbehaves:**
+
+| symptom | cause |
+|---|---|
+| "Set API_BASE in js/config.js" | `API_BASE` is still `""` |
+| "Could not reach the API." | API down, or the site's domain isn't in `ALLOWED_ORIGINS` (check the console for a CORS error) |
+| "Bad token." | token mismatch with `api/.env` |
+| saved fine, but a stack bar didn't move | the project was saved with an empty **Tools** field |
+
+> `/admin.html` has `noindex` and every write needs the token, which is enough for a personal
+> portfolio. A real login is a natural next Python lesson.
 
 ## Way 2 — edit the JSON file (no backend needed)
 
-If you're running fully static (no backend yet), edit **`site/data/projects.json`** and commit.
-Each project is one object:
+Running fully static, edit **`site/data/projects.json`** and commit. Each project is one object:
 
 ```json
 {
-  "id": "cheat-code-scanner",
+  "id": "olist-sql",
   "meta": "2026 · LOG #05",
-  "title": "Cheat Code Scanner",
+  "title": "Olist SQL Analysis",
   "body": "What you built and the lesson that stuck.",
-  "tags": ["loops", "conditionals", "accumulator"],
-  "url": "https://github.com/your-handle/repo"
+  "tools": ["SQL", "PostgreSQL"],
+  "tags": ["joins", "window functions"],
+  "url": ""
 }
 ```
 
 - `id` must be unique (lowercase-with-dashes).
-- `tags` is a list; leave `[]` for none.
-- `url` is the repo/demo link; leave `""` to hide the button.
+- `tools` and `tags` are lists. `[]` for none, but an empty `tools` means no stack credit.
+- `url` is the repo/demo link. `""` hides the button. **Never link a repo that doesn't exist yet.**
 - Newest goes at the **top** of the array.
 
-Push to GitHub → Cloudflare Pages rebuilds in ~30 seconds.
+Push to GitHub, and the `my-website` Worker auto-deploys.
 
-> Note: the API and the JSON file are two separate stores. Use the Admin panel **or** the JSON
-> file as your source of truth — pick one so they don't drift. With the backend live, the API
-> wins and the JSON file is just the offline fallback.
+> The API and the JSON file are two separate stores. Pick one as the source of truth so they
+> don't drift. With the backend live the API wins and the JSON file is the offline fallback,
+> which means it's also what visitors see if dockerHost is down. Worth keeping roughly current
+> either way.
+
+---
 
 ## Updating other parts of the page
 
-These live directly in `site/index.html` (search for the comment markers):
+Most of this page stopped being hand-edited during the 2026-08-04 phases. What's still manual:
 
-| You want to change | Find this section | What to edit |
+| You want to change | Where | What to edit |
 |---|---|---|
-| The FEATURED highlight | `<!-- featured entry` | Title, body, tags, the two code blocks |
-| Skill XP bars | `id="stack"` | `style="width:72%"` on each `.skill__fill` + the level label |
-| "currently / streak / shipped / reading" strip | `class="strip"` | The text in each `.strip__value` |
-| Blog post cards | `id="writing"` | The two `.post` links |
-| Social links / email | `class="contact__links"` | `href` on each button |
-| Streak target number | `site/js/main.js` | `var target = 27;` |
+| The FEATURED highlight | `index.html`, `<!-- featured entry` | Title, body, tags, the two code blocks. **Also update `data-tools="..."` on the `<article>`** — the featured project isn't in `projects.json`, so that attribute is how its tools reach the stack tally. |
+| "currently" / "reading" strip text | `index.html`, `class="strip"` | The text in each `.strip__value` |
+| IT foundation chips | `index.html`, `id="foundation"` | The `.tag` chips and the gold callout |
+| Social links / email | `index.html`, `class="contact__links"` | `href` on each button |
 | Typing-line phrases | `site/js/main.js` | the `phrases` array |
+| Streak start date | `site/js/main.js` | `var START = new Date(2026, 6, 1)` — month is 0-indexed, 6 = July |
+| "next up" tools | `site/js/main.js` | the `STACK_NEXT` array |
+
+**Computed, so don't hand-edit them:**
+
+- **Stack XP bars** (`id="stack"`) — built by `main.js` from every project's `tools` plus the
+  featured block's `data-tools`. There is no width to set. Ship a project using a tool and its
+  bar grows on its own.
+- **Streak** (`data-streak`) — days since the start date, computed live. Never resets.
+- **Shipped count** (`data-shipped`) — the number of projects rendered.
+- **Blog cards** (`id="writing"`) — the two newest posts from
+  `site/content/posts/index.json`. See `docs/ADD-A-POST.md`. The section hides itself when
+  there are no posts.
 
 All colors, fonts and spacing come from `site/css/tokens/`. Change a token once and it updates
-everywhere — don't paste raw hex codes into the HTML.
+everywhere. Don't paste raw hex into the HTML.

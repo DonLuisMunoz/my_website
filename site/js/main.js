@@ -80,8 +80,11 @@
     if (!listEl) return;
     if (!projects || !projects.length) { listEl.innerHTML = ""; return; }
     listEl.innerHTML = projects.map(cardHTML).join("");
+    // The featured project is bespoke HTML, not a projects.json entry, so
+    // counting only the JSON undercounted the real number of shipped projects.
     var shipped = document.querySelector("[data-shipped]");
-    if (shipped) shipped.textContent = projects.length;
+    var featured = document.querySelectorAll(".featured").length;
+    if (shipped) shipped.textContent = projects.length + featured;
   }
 
   function loadProjects() {
@@ -151,6 +154,43 @@
         : "";
     }
   }
+
+  /* ---------- 4c. latest posts, from the same manifest /blog reads ---------- */
+  // The section starts hidden and only appears if there are real posts,
+  // so the home page can never show placeholder writing.
+  (function latestPosts() {
+    var wrap = document.getElementById("writing");
+    var list = document.getElementById("writing-list");
+    if (!wrap || !list) return;
+
+    var MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    function meta(p) {
+      var d = String(p.date || "").split("-");
+      var when = d.length === 3 ? MONTHS[parseInt(d[1], 10) - 1] + " " + d[0] : "";
+      return when + (p.minutes ? " · " + p.minutes + " MIN READ" : "");
+    }
+
+    fetch("./content/posts/index.json")
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (data) {
+        var posts = ((data && data.posts) || [])
+          .filter(function (p) { return p && p.slug && !p.draft; })
+          .sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); })
+          .slice(0, 2);
+        if (!posts.length) return;
+        list.innerHTML = posts.map(function (p) {
+          return (
+            '<a class="post" href="./blog/?p=' + encodeURIComponent(p.slug) + '">' +
+              '<div class="card__meta">' + esc(meta(p)) + "</div>" +
+              '<h3 class="post__title">' + esc(p.title || p.slug) + "</h3>" +
+              '<p class="post__body">' + esc(p.summary || "") + "</p>" +
+            "</a>"
+          );
+        }).join("");
+        wrap.hidden = false;
+      })
+      .catch(function () { /* no posts, section stays hidden */ });
+  })();
 
   /* ---------- 5. contact form ---------- */
   var form = document.getElementById("contact-form");

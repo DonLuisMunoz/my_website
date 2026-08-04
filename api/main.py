@@ -7,7 +7,14 @@ What it does:
   PUT    /api/projects/{id}     -> admin, edit a project
   DELETE /api/projects/{id}     -> admin, remove a project
   POST   /api/contact           -> public, store a contact message (+ optional email)
+  GET    /api/messages          -> admin, read the contact inbox
   GET    /api/health            -> public, uptime check for Cloudflare Tunnel
+
+Note on projects: a project has BOTH `tools` and `tags`.
+  tools = tech that drives the site's stack bars (SQL, Python, Power BI)
+  tags  = display-only concept labels on the card
+The front end ranks the stack bars by how many projects list each tool, so
+dropping `tools` here would silently empty that whole section.
 
 Admin routes require:  Authorization: Bearer <ADMIN_TOKEN>
 
@@ -18,13 +25,14 @@ it through a Cloudflare Tunnel (see DEPLOY.md).
 
 import os
 import re
+import time
 import smtplib
 import sqlite3
 import secrets
 from email.message import EmailMessage
 from contextlib import contextmanager
 
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, Field
 
@@ -73,6 +81,7 @@ def init_db():
                 meta      TEXT,
                 title     TEXT NOT NULL,
                 body      TEXT,
+                tools     TEXT,            -- stored as comma-separated
                 tags      TEXT,            -- stored as comma-separated
                 url       TEXT,
                 created   TEXT DEFAULT (datetime('now'))
@@ -85,6 +94,11 @@ def init_db():
                 created TEXT DEFAULT (datetime('now'))
             )
         """)
+        # Databases created before `tools` existed keep their rows. CREATE TABLE
+        # IF NOT EXISTS won't add a column to a table that's already there.
+        columns = {r["name"] for r in conn.execute("PRAGMA table_info(projects)")}
+        if "tools" not in columns:
+            conn.execute("ALTER TABLE projects ADD COLUMN tools TEXT")
 
 
 init_db()
@@ -107,7 +121,8 @@ class ProjectIn(BaseModel):
     title: str = Field(min_length=1, max_length=120)
     meta: str = ""
     body: str = ""
-    tags: list[str] = []
+    tools: list[str] = []   # drives the stack bars
+    tags: list[str] = []    # display-only labels
     url: str = ""
 
 
@@ -117,11 +132,16 @@ class Contact(BaseModel):
     message: str = Field(min_length=1, max_length=4000)
 
 
+def csv_list(value: str | None) -> list[str]:
+    return [part.strip() for part in (value or "").split(",") if part.strip()]
+
+
 def row_to_project(r: sqlite3.Row) -> dict:
     return {
         "id": r["id"], "meta": r["meta"], "title": r["title"],
         "body": r["body"], "url": r["url"],
-        "tags": [t for t in (r["tags"] or "").split(",") if t],
+        "tools": csv_list(r["tools"]),
+        "tags": csv_list(r["tags"]),
     }
 
 
@@ -147,8 +167,9 @@ def add_project(p: ProjectIn, authorization: str | None = Header(default=None)):
         if conn.execute("SELECT 1 FROM projects WHERE id=?", (pid,)).fetchone():
             pid = f"{pid}-{secrets.token_hex(2)}"
         conn.execute(
-            "INSERT INTO projects (id, meta, title, body, tags, url) VALUES (?,?,?,?,?,?)",
-            (pid, p.meta, p.title, p.body, ",".join(p.tags), p.url),
+            "INSERT INTO projects (id, meta, title, body, tools, tags, url)"
+            " VALUES (?,?,?,?,?,?,?)",
+            (pid, p.meta, p.title, p.body, ",".join(p.tools), ",".join(p.tags), p.url),
         )
     return {"id": pid, "ok": True}
 
@@ -158,8 +179,8 @@ def edit_project(pid: str, p: ProjectIn, authorization: str | None = Header(defa
     require_admin(authorization)
     with db() as conn:
         cur = conn.execute(
-            "UPDATE projects SET meta=?, title=?, body=?, tags=?, url=? WHERE id=?",
-            (p.meta, p.title, p.body, ",".join(p.tags), p.url, pid),
+            "UPDATE projects SET meta=?, title=?, body=?, tools=?, tags=?, url=? WHERE id=?",
+            (p.meta, p.title, p.body, ",".join(p.tools), ",".join(p.tags), p.url, pid),
         )
         if cur.rowcount == 0:
             raise HTTPException(status_code=404, detail="Not found")
@@ -174,8 +195,46 @@ def delete_project(pid: str, authorization: str | None = Header(default=None)):
     return {"ok": True}
 
 
+@app.get("/api/messages")
+def list_messages(authorization: str | None = Header(default=None)):
+    require_admin(authorization)
+    with db() as conn:
+        rows = conn.execute(
+            "SELECT id, name, email, message, created FROM messages ORDER BY id DESC"
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
+# /api/contact is the only public write route, so it's the only one bots can
+# hammer. This is a deliberately dumb in-memory throttle: it resets on restart
+# and doesn't survive multiple workers, which is fine for one container.
+CONTACT_MAX = int(os.getenv("CONTACT_MAX_PER_HOUR", "5"))
+_contact_hits: dict[str, list[float]] = {}
+
+
+def _throttle(request: Request):
+    # Behind the tunnel the socket IP is Cloudflare's, so prefer its header.
+    who = request.headers.get("cf-connecting-ip") or (
+        request.client.host if request.client else "unknown"
+    )
+    now = time.time()
+
+    # Without this the dict keeps one key per IP that ever posted, forever.
+    # Slow, but it is a leak, and a bot sweeping addresses would grow it fast.
+    if len(_contact_hits) > 1000:
+        for ip in [k for k, v in _contact_hits.items() if all(now - t >= 3600 for t in v)]:
+            del _contact_hits[ip]
+
+    recent = [t for t in _contact_hits.get(who, []) if now - t < 3600]
+    if len(recent) >= CONTACT_MAX:
+        raise HTTPException(status_code=429, detail="Too many messages, try again later")
+    recent.append(now)
+    _contact_hits[who] = recent
+
+
 @app.post("/api/contact")
-def contact(msg: Contact):
+def contact(msg: Contact, request: Request):
+    _throttle(request)
     with db() as conn:
         conn.execute(
             "INSERT INTO messages (name, email, message) VALUES (?,?,?)",

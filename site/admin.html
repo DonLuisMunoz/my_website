@@ -62,13 +62,17 @@
       </div>
       <div class="row">
         <div class="field">
-          <label for="f-tags">Tags (comma-separated)</label>
-          <input id="f-tags" type="text" placeholder="loops, conditionals, accumulator">
+          <label for="f-tools">Tools — drives the stack bars (comma-separated)</label>
+          <input id="f-tools" type="text" placeholder="SQL, PostgreSQL, Python">
         </div>
         <div class="field">
-          <label for="f-url">Repo / link URL</label>
-          <input id="f-url" type="url" placeholder="https://github.com/you/repo">
+          <label for="f-tags">Tags — card labels only (comma-separated)</label>
+          <input id="f-tags" type="text" placeholder="loops, conditionals, accumulator">
         </div>
+      </div>
+      <div class="field">
+        <label for="f-url">Repo / link URL (leave blank if there's no repo)</label>
+        <input id="f-url" type="url" placeholder="https://github.com/you/repo">
       </div>
       <button type="submit" class="btn btn--gold">save project →</button>
       <div class="form-status" id="status" style="color:var(--accent);"></div>

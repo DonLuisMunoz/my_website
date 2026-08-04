@@ -1,0 +1,216 @@
+#!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.10"
+# dependencies = []
+# ///
+"""
+newpost.py — scaffold and check blog posts. Runs, does its job, exits.
+
+    uv run newpost.py new "A join that returned zero rows"
+    uv run newpost.py new "What I got wrong about renting" -c notes -t housing,tampa
+    uv run newpost.py check
+
+Nothing stays running. There's no server here on purpose: VS Code Live Server
+already previews the site, and VS Code already edits the markdown. The only
+part worth automating is the bookkeeping, which is the slug, the manifest
+entry, and the image folder.
+
+Standard library only, so `uv run` needs to install nothing.
+"""
+
+import argparse
+import json
+import re
+import sys
+from datetime import date
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+POSTS = ROOT / "site" / "content" / "posts"
+MANIFEST = POSTS / "index.json"
+IMAGES = ROOT / "site" / "assets" / "posts"
+WORDS_PER_MINUTE = 220
+
+STARTER = """Open with the thing the reader already feels. Not what you built, what they'd
+recognize. Then get to the point.
+
+## A section
+
+Write. Delete this scaffolding as you go.
+
+Images go in `site/assets/posts/{slug}/`. Reference them like this, and the
+relative path resolves correctly from /blog/:
+
+```
+![what it shows](../assets/posts/{slug}/screenshot.png)
+```
+
+Stop when the point is made.
+"""
+
+# Image checks ignore anything inside a fenced block, so an example in a post
+# about writing posts doesn't get reported as a broken image.
+RE_FENCED = re.compile(r"^```.*?^```", re.S | re.M)
+
+
+def slugify(text: str) -> str:
+    s = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+    return s or "untitled"
+
+
+def load_manifest() -> dict:
+    if not MANIFEST.exists():
+        return {"posts": []}
+    try:
+        return json.loads(MANIFEST.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        sys.exit(f"index.json is not valid JSON ({e}). Fix it before running this.")
+
+
+def save_manifest(data: dict) -> None:
+    MANIFEST.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def read_minutes(body: str) -> int:
+    # Rough on purpose. Fenced code reads slower than prose, but nobody has ever
+    # been misled by a read time being one minute off.
+    return max(1, round(len(body.split()) / WORDS_PER_MINUTE))
+
+
+def cmd_new(args: argparse.Namespace) -> None:
+    # --slug goes through slugify too. Taking it raw let "Not A Slug!!" become
+    # a real filename and a real manifest entry, which then can't be served.
+    slug = slugify(args.slug) if args.slug else slugify(args.title)
+    md = POSTS / f"{slug}.md"
+    data = load_manifest()
+
+    if any(p.get("slug") == slug for p in data["posts"]) or md.exists():
+        sys.exit(f"'{slug}' already exists. Pick another title, or pass --slug.")
+
+    POSTS.mkdir(parents=True, exist_ok=True)
+    img_dir = IMAGES / slug
+    img_dir.mkdir(parents=True, exist_ok=True)
+    # git won't track an empty directory, so give it something to hold on to
+    (img_dir / ".gitkeep").touch()
+
+    md.write_text(STARTER.format(slug=slug), encoding="utf-8")
+
+    entry = {
+        "slug": slug,
+        "title": args.title,
+        "date": args.date or date.today().isoformat(),
+        "category": args.category,
+        "minutes": read_minutes(md.read_text(encoding="utf-8")),
+        "summary": args.summary,
+        "tags": [t.strip() for t in args.tags.split(",") if t.strip()] if args.tags else [],
+    }
+    if args.draft:
+        entry["draft"] = True
+
+    data["posts"].insert(0, entry)
+    save_manifest(data)
+
+    rel = md.relative_to(ROOT)
+    print(f"  created  {rel}")
+    print(f"  created  {img_dir.relative_to(ROOT)}/")
+    print(f"  updated  {MANIFEST.relative_to(ROOT)}")
+    print()
+    print("  next:")
+    print(f"    1. write it            {rel}")
+    print("    2. fill in the summary  site/content/posts/index.json")
+    print("    3. preview              Live Server -> site/blog/")
+    print("    4. read time + checks   uv run newpost.py check")
+    if args.draft:
+        print("\n  marked as a draft, so it stays off the site until you remove that flag.")
+
+
+def cmd_check(args: argparse.Namespace) -> None:
+    data = load_manifest()
+    problems = []
+    changed = False
+
+    seen = set()
+    for p in data["posts"]:
+        slug = p.get("slug")
+        where = slug or "<entry with no slug>"
+
+        if not slug:
+            problems.append("an entry has no slug")
+            continue
+        if slug in seen:
+            problems.append(f"{where}: duplicate slug")
+        seen.add(slug)
+
+        md = POSTS / f"{slug}.md"
+        if not md.exists():
+            problems.append(f"{where}: no matching {slug}.md")
+            continue
+
+        for field in ("title", "date", "summary"):
+            if not p.get(field):
+                problems.append(f"{where}: {field} is empty")
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(p.get("date", ""))):
+            problems.append(f"{where}: date should be YYYY-MM-DD")
+        if not p.get("category"):
+            problems.append(f"{where}: no category, so it won't show under a filter")
+
+        body = md.read_text(encoding="utf-8")
+        actual = read_minutes(body)
+        if p.get("minutes") != actual:
+            print(f"  read time  {slug}: {p.get('minutes')} -> {actual}")
+            p["minutes"] = actual
+            changed = True
+
+        # catch images referenced by a post that aren't actually there
+        for src in re.findall(r"!\[[^\]]*\]\(([^)\s]+)\)", RE_FENCED.sub("", body)):
+            if src.startswith(("http://", "https://", "//")):
+                continue
+            # Posts are viewed at /blog/, so relative paths resolve from there.
+            # A leading slash means the site root, and joining that with pathlib
+            # would jump to the filesystem root instead, so strip it first.
+            base = ROOT / "site" if src.startswith("/") else ROOT / "site" / "blog"
+            target = (base / src.lstrip("/")).resolve()
+            if not target.exists():
+                problems.append(f"{where}: image not found -> {src}")
+
+    # files on disk with no manifest entry are invisible to the site
+    for md in sorted(POSTS.glob("*.md")):
+        if md.stem not in seen:
+            problems.append(f"{md.name}: on disk but not in index.json, so nothing links to it")
+
+    if changed:
+        save_manifest(data)
+        print(f"  updated  {MANIFEST.relative_to(ROOT)}")
+
+    print()
+    if problems:
+        print(f"  {len(problems)} thing(s) to fix:")
+        for p in problems:
+            print(f"    - {p}")
+        sys.exit(1)
+    print(f"  {len(data['posts'])} post(s), all clean.")
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    new = sub.add_parser("new", help="scaffold a post: markdown file, image folder, manifest entry")
+    new.add_argument("title")
+    new.add_argument("-c", "--category", default="building", help="default: building")
+    new.add_argument("-t", "--tags", default="", help="comma-separated")
+    new.add_argument("-s", "--summary", default="", help="the card blurb, can be filled in later")
+    new.add_argument("--slug", default="", help="override the slug derived from the title")
+    new.add_argument("--date", default="", help="YYYY-MM-DD, defaults to today")
+    new.add_argument("--draft", action="store_true", help="keep it off the site for now")
+    new.set_defaults(func=cmd_new)
+
+    chk = sub.add_parser("check", help="validate the manifest and refresh read times")
+    chk.set_defaults(func=cmd_check)
+
+    args = ap.parse_args()
+    args.func(args)
+
+
+if __name__ == "__main__":
+    main()

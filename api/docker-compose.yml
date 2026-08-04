@@ -1,23 +1,69 @@
+# Deploys two ways from this one file:
+#
+#   CLI       cd api && docker compose up -d --build
+#             values below come from api/.env, which compose reads automatically
+#
+#   Portainer Stacks -> Add stack -> Repository
+#             Repository URL   https://github.com/DonLuisMunoz/my_website
+#             Compose path     api/docker-compose.yml
+#             Environment      add ADMIN_TOKEN, TUNNEL_NETWORK, etc. in the UI
+#
+# Portainer is why this uses `environment:` instead of `env_file:`. A git clone
+# has no .env in it (it's gitignored, correctly), so `env_file` would fail the
+# deploy. Interpolated variables work from api/.env on the CLI and from the
+# stack's env vars in Portainer, with no change to this file.
+
 services:
   api:
     build: .
+    image: portfolio-api:latest
     container_name: portfolio-api
     restart: unless-stopped
-    env_file: .env
-    ports:
-      - "8000:8000"          # remove this if ONLY the tunnel should reach it
-    volumes:
-      - ./data:/app/data      # persists the SQLite database
 
-  # Optional: run the Cloudflare Tunnel as a sidecar so nothing is exposed
-  # to the public internet directly. Create the tunnel token in the
-  # Cloudflare Zero Trust dashboard, then drop it in .env as TUNNEL_TOKEN.
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    container_name: portfolio-tunnel
-    restart: unless-stopped
-    command: tunnel --no-autoupdate run
     environment:
-      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
-    depends_on:
-      - api
+      # No default on purpose. Deploy fails loudly rather than coming up with
+      # a guessable admin token.
+      ADMIN_TOKEN: ${ADMIN_TOKEN:?set ADMIN_TOKEN to a long random string}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://luisamunoz.com,https://www.luisamunoz.com}
+      CONTACT_MAX_PER_HOUR: ${CONTACT_MAX_PER_HOUR:-5}
+      CONTACT_TO: ${CONTACT_TO:-lamunoz12@gmail.com}
+      # Optional. Leave SMTP_HOST empty and messages are just stored,
+      # readable at GET /api/messages with the admin token.
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+
+    volumes:
+      - portfolio-data:/app/data
+
+    networks:
+      - default
+      - tunnel
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request;urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+    # No published port. The existing cloudflared container reaches this one
+    # over the shared network, so nothing listens on the LAN.
+    # Uncomment only to curl it from dockerHost itself:
+    # ports:
+    #   - "8000:8000"
+
+volumes:
+  # A named volume, not a bind mount, so a Portainer git-repo deploy doesn't
+  # depend on a path existing on the host. Back it up with the rest of your
+  # Docker volumes.
+  portfolio-data:
+
+networks:
+  # The network the existing cloudflared container is already on. Find it with:
+  #   docker inspect -f '{{range $$k, $$v := .NetworkSettings.Networks}}{{$$k}} {{end}}' cloudflared
+  # Set TUNNEL_NETWORK in api/.env (CLI) or in the stack's env vars (Portainer).
+  tunnel:
+    external: true
+    name: ${TUNNEL_NETWORK:?set TUNNEL_NETWORK to the network cloudflared runs on}

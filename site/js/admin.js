@@ -21,6 +21,9 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
   }
+  function csv(value) {
+    return String(value || "").split(",").map(function (t) { return t.trim(); }).filter(Boolean);
+  }
 
   if (!API) {
     statusEl.textContent = "Set API_BASE in js/config.js before using the admin panel.";
@@ -57,7 +60,8 @@
       meta: $("f-meta").value.trim(),
       title: $("f-title").value.trim(),
       body: $("f-body").value.trim(),
-      tags: $("f-tags").value.split(",").map(function (t) { return t.trim(); }).filter(Boolean),
+      tools: csv($("f-tools").value),
+      tags: csv($("f-tags").value),
       url: $("f-url").value.trim()
     };
     var method = id ? "PUT" : "POST";
@@ -83,6 +87,7 @@
         if (!p) return;
         $("f-id").value = p.id; $("f-meta").value = p.meta || "";
         $("f-title").value = p.title || ""; $("f-body").value = p.body || "";
+        $("f-tools").value = (p.tools || []).join(", ");
         $("f-tags").value = (p.tags || []).join(", "); $("f-url").value = p.url || "";
         window.scrollTo({ top: 0, behavior: "smooth" });
       });

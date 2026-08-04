@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Writing · Luis A. Munoz</title>
+    <meta
+      name="description"
+      content="Luis A. Munoz writing in public. Notes on building things, on data and IT work, and on whatever else is worth writing down."
+    />
+
+    <!-- social share (Open Graph + Twitter) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="luisamunoz.com" />
+    <meta property="og:url" content="https://luisamunoz.com/blog/" />
+    <meta property="og:title" content="Writing · Luis A. Munoz" />
+    <meta
+      property="og:description"
+      content="Luis A. Munoz writing in public. Notes on building things, on data and IT work, and on whatever else is worth writing down."
+    />
+    <meta
+      property="og:image"
+      content="https://luisamunoz.com/assets/og-image.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Writing · Luis A. Munoz" />
+    <meta
+      name="twitter:description"
+      content="Luis A. Munoz writing in public. Notes on building things, on data and IT work, and on whatever else is worth writing down."
+    />
+    <meta
+      name="twitter:image"
+      content="https://luisamunoz.com/assets/og-image.png"
+    />
+
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="../assets/favicon.png" />
+    <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
+
+    <!-- fonts (Google Fonts, by reference) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- the ONE stylesheet -->
+    <link rel="stylesheet" href="../css/styles.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-M9YCFY8VNQ"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-M9YCFY8VNQ");
+    </script>
+  </head>
+  <body>
+    <!-- ============ NAV ============ -->
+    <nav class="nav">
+      <a href="../" class="nav__brand">
+        <span class="nav__mark">&gt;_</span>
+        <span class="nav__wordmark">luis<span class="dot">.</span>learns</span>
+      </a>
+      <div class="nav__links">
+        <a href="../#log" class="nav__link">log</a>
+        <a href="../#stack" class="nav__link">stack</a>
+        <a href="../#foundation" class="nav__link">background</a>
+        <a href="./" class="nav__link">writing</a>
+        <a href="../#contact" class="nav__cta">say hi</a>
+      </div>
+    </nav>
+
+    <!-- ============ BLOG ============ -->
+    <section class="section section--paper">
+      <div class="blog__inner">
+        <!-- shown only on the list view; blog.js unhides it -->
+        <div id="blog-list-head" class="section__head" hidden>
+          <div class="section-kicker">// writing</div>
+          <h1 class="section-title">Writing it down</h1>
+          <p class="section-lead">
+            Notes I keep in public. Some of it is what I'm building, some of it
+            isn't.
+          </p>
+          <!-- filter chips, built from whatever categories the posts declare -->
+          <div id="blog-filters" class="filters"></div>
+        </div>
+
+        <!-- blog.js renders either the post list or a single post here -->
+        <div id="blog-root" class="blog__body">
+          <p class="section-lead">Loading…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+      <div class="footer__brand">
+        <span class="footer__mark">&gt;_</span>
+        <span class="footer__name">Luis A. Munoz · learning in public</span>
+      </div>
+      <div class="footer__meta">built &amp; hosted by hand · 2026</div>
+    </footer>
+
+    <script src="../js/blog.js"></script>
+  </body>
+</html>
