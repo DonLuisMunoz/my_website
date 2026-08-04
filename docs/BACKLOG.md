@@ -17,6 +17,12 @@ contributions GraphQL that writes a number into the site, or (b) embed a
 third-party streak-stats image (styling won't match the brutalist skin, and it
 resets to 0 on a missed day). Revisit when the homelab backend is in play.
 
+## NEXT SESSION — backend + blog, done together
+Luis's call (2026-08-04): the backend phase and the `/blog` build are one combined
+project, not two. Standing up `api/` is what makes the blog dynamic (write/manage
+posts, not hand-edit HTML), so do them in the same session. Details in the two
+sections below.
+
 ## Backend phase — make it a full-stack project
 Stand up the FastAPI backend (api/) so the site stops being purely static and
 becomes a real full-stack build. This unlocks the dynamic features:
