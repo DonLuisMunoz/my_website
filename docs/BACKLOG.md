@@ -17,6 +17,18 @@ contributions GraphQL that writes a number into the site, or (b) embed a
 third-party streak-stats image (styling won't match the brutalist skin, and it
 resets to 0 on a missed day). Revisit when the homelab backend is in play.
 
+## Backend phase — make it a full-stack project
+Stand up the FastAPI backend (api/) so the site stops being purely static and
+becomes a real full-stack build. This unlocks the dynamic features:
+- **Resume link/download** served + managed by the backend (versions, maybe
+  click tracking) instead of a static PDF. Deferred here on purpose 2026-08-04.
+- **Contact form** posts to the API instead of the mailto fallback.
+- **Project CMS** via the existing admin.html (add/edit projects without editing
+  JSON), which also feeds the tag-driven stack.
+- **Real GitHub-tied streak** (needs a server-side fetch — see below).
+Backend runs on the homelab behind a Cloudflare Tunnel (e.g. api.luisamunoz.com,
+a subdomain alongside the other homelab services). See api/ + docs/DEPLOY.md.
+
 ## v2.0 — Visitor-intent landing (self-select)
 A warm landing page ("Hi, I'm Luis. What brings you here?") with brutalist
 "doors" that route to tailored views. Visitor self-selects — no auto-detection
