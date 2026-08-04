@@ -1,0 +1,10 @@
+{
+  // Cloudflare Worker config for the portfolio site.
+  // This deploys the static files in ./site as an assets-only Worker.
+  // `npx wrangler deploy` (run by Cloudflare's build on each push) reads this.
+  "name": "my-website",
+  "compatibility_date": "2026-08-04",
+  "assets": {
+    "directory": "./site"
+  }
+}
