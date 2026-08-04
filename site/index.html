@@ -125,7 +125,7 @@
         <div class="strip__cell">
           <span class="strip__label">// shipped</span>
           <div class="strip__value">
-            <span class="t-accent" data-shipped>2</span> projects
+            <span class="t-accent" data-shipped>3</span> projects
           </div>
         </div>
         <div class="strip__cell">
@@ -147,8 +147,8 @@
           </p>
         </div>
 
-        <!-- featured entry (hand-curated highlight) -->
-        <article data-reveal class="featured">
+        <!-- featured entry (hand-curated highlight). data-tools feeds the stack tally. -->
+        <article data-reveal class="featured" data-tools="SQL,PostgreSQL,Docker">
           <div class="featured__flag">FEATURED</div>
           <div class="featured__row">
             <div class="featured__col">
@@ -216,60 +216,14 @@
         <div data-reveal class="section__head">
           <div class="section-kicker">// the stack</div>
           <h2 class="section-title">Tools I'm getting my hands dirty with</h2>
-          <p class="section-lead">Honest levels — XP bars, not flexes.</p>
+          <p class="section-lead">
+            Ranked by how many projects I've actually shipped with each tool.
+            The bars grow as I ship more.
+          </p>
         </div>
-        <div data-reveal class="skills">
-          <div>
-            <div class="skill__head">
-              <span>Python</span><span class="skill__level">comfortable</span>
-            </div>
-            <div class="skill__track">
-              <div class="skill__fill fill--gold" style="width: 72%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="skill__head">
-              <span>pandas</span><span class="skill__level">learning</span>
-            </div>
-            <div class="skill__track">
-              <div class="skill__fill fill--teal" style="width: 48%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="skill__head">
-              <span>Git &amp; GitHub</span
-              ><span class="skill__level">daily</span>
-            </div>
-            <div class="skill__track">
-              <div class="skill__fill fill--accent" style="width: 60%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="skill__head">
-              <span>SQL</span><span class="skill__level">starting out</span>
-            </div>
-            <div class="skill__track">
-              <div class="skill__fill fill--pink" style="width: 30%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="skill__head">
-              <span>NumPy</span><span class="skill__level">starting out</span>
-            </div>
-            <div class="skill__track">
-              <div class="skill__fill fill--gold" style="width: 26%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="skill__head">
-              <span>Matplotlib</span
-              ><span class="skill__level">starting out</span>
-            </div>
-            <div class="skill__track">
-              <div class="skill__fill fill--teal" style="width: 34%"></div>
-            </div>
-          </div>
-        </div>
+        <!-- bars are computed by js/main.js from each project's tools, ranked by reps -->
+        <div data-reveal class="skills" data-stack></div>
+        <div data-reveal class="stack-next" data-stack-next></div>
       </div>
     </section>
 

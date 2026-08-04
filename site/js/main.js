@@ -92,9 +92,65 @@
       ? fetch(apiUrl).then(function (r) { if (!r.ok) throw 0; return r.json(); })
           .catch(function () { return fetch(CFG.PROJECTS_FALLBACK).then(function (r) { return r.json(); }); })
       : fetch(CFG.PROJECTS_FALLBACK).then(function (r) { return r.json(); });
-    chain.then(renderProjects).catch(function () { /* leave empty */ });
+    chain.then(function (projects) {
+      renderProjects(projects);
+      computeStack(projects);
+    }).catch(function () { /* leave empty */ });
   }
   loadProjects();
+
+  /* ---------- 4b. tech stack, computed from each project's tools ---------- */
+  // XP by reps: a tool's level = how many projects use it. Bars grow as Luis ships.
+  var STACK_NEXT = ["Power BI"]; // targeted but not shipped yet — shown as "next up"
+  var STACK_PRIORITY = ["SQL", "PostgreSQL", "Python", "Power BI", "Docker", "Excel"];
+  var STACK_LEVELS = [null, "starting out", "getting reps", "comfortable", "strong", "daily"];
+  var STACK_WIDTHS = [0, 32, 56, 78, 90, 100];
+  var STACK_FILLS = ["fill--gold", "fill--teal", "fill--accent", "fill--pink"];
+
+  function computeStack(projects) {
+    var stackEl = document.querySelector("[data-stack]");
+    if (!stackEl) return;
+    var counts = {};
+    // tools from the hand-curated featured article (data-tools attribute)
+    var feat = document.querySelector(".featured[data-tools]");
+    var lists = [];
+    if (feat) lists.push(feat.getAttribute("data-tools").split(","));
+    (projects || []).forEach(function (p) { if (p.tools) lists.push(p.tools); });
+    lists.forEach(function (list) {
+      list.forEach(function (t) {
+        t = String(t).trim();
+        if (t) counts[t] = (counts[t] || 0) + 1;
+      });
+    });
+    var tools = Object.keys(counts).sort(function (a, b) {
+      if (counts[b] !== counts[a]) return counts[b] - counts[a];
+      var pa = STACK_PRIORITY.indexOf(a); pa = pa < 0 ? 99 : pa;
+      var pb = STACK_PRIORITY.indexOf(b); pb = pb < 0 ? 99 : pb;
+      return pa - pb;
+    });
+    stackEl.innerHTML = tools.map(function (t, i) {
+      var c = counts[t], tier = Math.min(c, 5);
+      return (
+        '<div>' +
+          '<div class="skill__head">' +
+            "<span>" + esc(t) + "</span>" +
+            '<span class="skill__level">' + STACK_LEVELS[tier] + " · " + c + (c === 1 ? " project" : " projects") + "</span>" +
+          "</div>" +
+          '<div class="skill__track">' +
+            '<div class="skill__fill ' + STACK_FILLS[i % STACK_FILLS.length] + '" style="width:' + STACK_WIDTHS[tier] + '%"></div>' +
+          "</div>" +
+        "</div>"
+      );
+    }).join("");
+    var nextEl = document.querySelector("[data-stack-next]");
+    if (nextEl) {
+      var upcoming = STACK_NEXT.filter(function (t) { return !counts[t]; });
+      nextEl.innerHTML = upcoming.length
+        ? '<span class="section-kicker">// next up</span>' +
+            upcoming.map(function (t) { return '<span class="tag">' + esc(t) + "</span>"; }).join("")
+        : "";
+    }
+  }
 
   /* ---------- 5. contact form ---------- */
   var form = document.getElementById("contact-form");

@@ -320,3 +320,8 @@ a { color: inherit; }
   .contact__title { font-size: 40px; }
   .nav__links .nav__link { display: none; }
 }
+
+/* "next up" row under the computed stack bars */
+.stack-next { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.stack-next .section-kicker { margin: 0; }
+.stack-next:empty { display: none; }
